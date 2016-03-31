@@ -1,0 +1,20 @@
+﻿Build started 2016-03-21 9:59:22 PM.
+     1>Project "C:\Users\Alex\Documents\Visual Studio 2013\Projects\SDL2_SolutionTemplate\DemosAJ\DemosAJ.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../SDL2/include /I../SDL2_image/include111 /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sdl2_ex1_fenetreAvecImages.cpp sdl2_ex2_gestionEvenements.cpp sdl2_ex3_charset_images.cpp sdl2_ex4.cpp
+         sdl2_ex4.cpp
+         sdl2_ex3_charset_images.cpp
+         sdl2_ex2_gestionEvenements.cpp
+         sdl2_ex1_fenetreAvecImages.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Alex\Documents\Visual Studio 2013\Projects\SDL2_SolutionTemplate\Debug\DemosAJ.exe" /INCREMENTAL /NOLOGO /LIBPATH:../SDL2/lib/x86 /LIBPATH:../SDL2_image/lib/x86 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ../SDL2/lib/x86/SDL2.lib ../SDL2/lib/x86/SDL2main.lib ../SDL2_image/lib/x86/SDL2_image.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Alex\Documents\Visual Studio 2013\Projects\SDL2_SolutionTemplate\Debug\DemosAJ.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Alex\Documents\Visual Studio 2013\Projects\SDL2_SolutionTemplate\Debug\DemosAJ.lib" /MACHINE:X86 Debug\sdl2_ex1_fenetreAvecImages.obj
+         Debug\sdl2_ex2_gestionEvenements.obj
+         Debug\sdl2_ex3_charset_images.obj
+         Debug\sdl2_ex4.obj
+         DemosAJ.vcxproj -> C:\Users\Alex\Documents\Visual Studio 2013\Projects\SDL2_SolutionTemplate\Debug\DemosAJ.exe
+     1>Done Building Project "C:\Users\Alex\Documents\Visual Studio 2013\Projects\SDL2_SolutionTemplate\DemosAJ\DemosAJ.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.72
