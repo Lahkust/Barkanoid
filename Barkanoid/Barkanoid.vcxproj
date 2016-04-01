@@ -88,6 +88,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="visuel.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="balle.h" />
+    <ClInclude Include="barre.h" />
+    <ClInclude Include="bloc.h" />
+    <ClInclude Include="bonus.h" />
+    <ClInclude Include="visuel.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

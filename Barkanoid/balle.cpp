@@ -9,6 +9,7 @@ Commentaires :		TODO: faire rebondir la balle sur les murs
 
 
 //********************************* Include 
+#include "balle.h"
 
 
 //********************************* Variables globales 

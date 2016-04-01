@@ -9,6 +9,7 @@ Commentaires :		TODO: placer ici le code présent das le main
 
 
 //********************************* Include 
+#include "visuel.h"
 
 
 //********************************* Variables globales 

@@ -1,20 +1,15 @@
 /* En-tête du programme
 *****************************************
-Fichier :			bloc.cpp
+Fichier :			bloc.h
 Auteur:				Guillaume Bergs & Shawn Corriveau
 Date de création :  2016/01/01
 Description :		Tout ce qui concerne les blocs
 Commentaires :
 *****************************************/
 
+#ifndef BLOC_H
+#define BLOC_H
 
-//********************************* Include 
-#include "bloc.h"
+//Les définitions de fonctions
 
-
-//********************************* Variables globales 
-
-
-//********************************* Fonctions de la balle
-
-
+#endif

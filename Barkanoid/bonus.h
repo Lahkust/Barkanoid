@@ -1,20 +1,15 @@
 /* En-tête du programme
 *****************************************
-Fichier :			bonus.cpp
+Fichier :			bonus.h
 Auteur:				Guillaume Bergs & Shawn Corriveau
 Date de création :  2016/01/01
 Description :		Tout ce qui concerne les bonus
 Commentaires :
 *****************************************/
 
+#ifndef BONUS_H
+#define BONUS_H
 
-//********************************* Include 
-#include "bonus.h"
+//Les définitions de fonctions
 
-
-//********************************* Variables globales 
-
-
-//********************************* Fonctions de la balle
-
-
+#endif
