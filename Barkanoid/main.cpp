@@ -1,10 +1,10 @@
 /* En-tête du programme
 *****************************************
-Programme :			sdl2_ex4.cpp
-Auteur:				Alex J
+Fichier :			main.cpp
+Auteur:				Guillaume Bergs & Shawn Corriveau
 Date de création :  2016/01/01
-Description :		Ce programme affiche une animation avec SDL2. Ce programme réagit à plusieurs énénements clavier et souris
-Commentaires :		Ce code est inspiré du site : http://lazyfoo.net/tutorials/SDL/
+Description :		Fonction principale du jeu Barkanoid
+Commentaires :
 *****************************************/
 
 #include <iostream>

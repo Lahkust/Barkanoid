@@ -15,16 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sdl2_ex1_fenetreAvecImages.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sdl2_ex2_gestionEvenements.cpp">
+    <ClCompile Include="balle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sdl2_ex3_charset_images.cpp">
+    <ClCompile Include="bloc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sdl2_ex4_animation.cpp">
+    <ClCompile Include="barre.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bonus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="visuel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

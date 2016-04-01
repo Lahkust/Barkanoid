@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{EAA7F019-850C-4DA0-8CA3-C8AAB58AFFBD}</ProjectGuid>
+    <ProjectGuid>{5EBC63FE-215B-4946-9692-07E7FC065719}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DemosAJ</RootNamespace>
   </PropertyGroup>
@@ -81,10 +81,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="sdl2_ex1_fenetreAvecImages.cpp" />
-    <ClCompile Include="sdl2_ex2_gestionEvenements.cpp" />
-    <ClCompile Include="sdl2_ex3_charset_images.cpp" />
-    <ClCompile Include="sdl2_ex4_animation.cpp" />
+    <ClCompile Include="barre.cpp" />
+    <ClCompile Include="bloc.cpp" />
+    <ClCompile Include="balle.cpp" />
+    <ClCompile Include="bonus.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="visuel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
