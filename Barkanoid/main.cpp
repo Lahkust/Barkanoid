@@ -13,6 +13,11 @@ Commentaires :
 #include "../SDL2/include/SDL.h"
 #include "../SDL2_image/include/SDL_image.h"
 
+#include "balle.h"
+#include "barre.h"
+#include "bloc.h"
+#include "bonus.h"
+#include "visuel.h"
 
 
 //***************************************** Prototypes
@@ -195,8 +200,8 @@ int LTexture::getHeight()
 //********************************* Variables globales (partie 2)
 
 //Taille de l'écran en pixels
-const int LARGEUR_FENETRE = 640;
-const int HAUTEUR_FENETRE = 512;
+const int LARGEUR_FENETRE = 600;
+const int HAUTEUR_FENETRE = 700;
 
 const int FACTEUR_RALENTISSEMENT_ANIMATION = 200;  //Pour rendre l'animation plus rapide, indiquer un chiffre plus petit
 
