@@ -73,6 +73,8 @@ public:
 	int get_taille_x() { return taille_x; }
 	int get_taille_y() { return taille_y; }
 
+	void set_taille_x(int taille){ taille_x = taille; }
+	void set_taille_y(int taille){ taille_y = taille; }
 
 private:
 
