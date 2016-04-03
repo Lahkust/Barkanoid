@@ -483,6 +483,8 @@ int main(int argc, char* args[])
   balle ball; //La balle
   ball.set_velocityC(1, 2); //Sa vitesse de départ
 
+  barre labarre;
+  labarre.multiply_size(0.5); //Pour une taille de 1
 
 
 
@@ -494,15 +496,13 @@ int main(int argc, char* args[])
   //int positionHommeX = (LARGEUR_FENETRE - LARGEUR_IMAGE_HOMME_CHARSET) / 2;
   //int positionHommeY = (HAUTEUR_FENETRE - HAUTEUR_IMAGE_HOMME_CHARSET) / 2;
 
-  int positionBarreGX = LARGEUR_FENETRE / 2;
-  int positionBarreGY = 650;
-  int positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
-  int positionBarreMY = 650;
-  int positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
-  int positionBarreDY = 650;
+  labarre.Gx = LARGEUR_FENETRE / 2;
+  labarre.Gy = 650;
+  labarre.Dx = (labarre.Gx + LARGEUR_IMAGE_BARRE_G) + LARGEUR_IMAGE_BARRE_M;
+  labarre.Dy = 650;
 
-  int positionBalleX = LARGEUR_FENETRE / 2;
-  int positionBalleY = HAUTEUR_FENETRE / 2;
+  ball.x = LARGEUR_FENETRE / 2;
+  ball.y = HAUTEUR_FENETRE / 2;
 
 
   //Start up SDL and create window
@@ -562,9 +562,8 @@ int main(int argc, char* args[])
 			//positionHommeX = e.motion.x;
 			//positionHommeY = e.motion.y;
 
-			  positionBarreGX = e.motion.x -25;
-			  positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
-			  positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
+			  labarre.Gx = e.motion.x -25;
+			  labarre.Dx = (labarre.Gx + LARGEUR_IMAGE_BARRE_G) + LARGEUR_IMAGE_BARRE_M;
 
 		  }
 
@@ -596,17 +595,15 @@ int main(int argc, char* args[])
 			case SDLK_LEFT:
 			//  positionHommeX -= 10;
 
-				positionBarreGX -= 10;
-				positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
-				positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
+				labarre.Gx -= 10;
+				labarre.Dx = (labarre.Gx + LARGEUR_IMAGE_BARRE_G) + LARGEUR_IMAGE_BARRE_M;
 			  break;
 
 			case SDLK_RIGHT:
 			//  positionHommeX += 10;
 
-				positionBarreGX += 10;
-				positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
-				positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
+				labarre.Gx += 10;
+				labarre.Dx = (labarre.Gx + LARGEUR_IMAGE_BARRE_G) + LARGEUR_IMAGE_BARRE_M;
 			  break;
 
 			default:
@@ -629,10 +626,10 @@ int main(int argc, char* args[])
 
 
 		//hommeTexture.render(positionHommeX, positionHommeY, currentHommeRect);
-		barreGTexture.render(positionBarreGX, positionBarreGY, &barreGRect);
-		barreMTexture.render(positionBarreMX, positionBarreMY, &barreMRect);
-		barreDTexture.render(positionBarreDX, positionBarreDY, &barreDRect);
-		balleTexture.render(positionBalleX, positionBalleY, &balleRect);
+		barreGTexture.render(labarre.Gx, labarre.Gy, &barreGRect);
+		barreMTexture.render((labarre.Gx + LARGEUR_IMAGE_BARRE_G), labarre.Gy, &barreMRect);
+		barreDTexture.render(labarre.Dx, labarre.Dy, &barreDRect);
+		balleTexture.render(ball.x, ball.y, &balleRect);
 
 		//Update screen
 		SDL_RenderPresent(rendererFenetre);
@@ -653,44 +650,41 @@ int main(int argc, char* args[])
 				ball.get_velocityP(balleR, balleA);
 
 				//Gauche
-				if (positionBalleX < 0)
+				if (ball.x < 0)
 				{
 					ball.set_velocityC(-balleX, balleY);
 					
 				}
 				//Droite
-				if ((positionBalleX+LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
+				if ((ball.x+LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
 				{
 					ball.set_velocityC(-balleX, balleY);
 				}
 				//Haut
-				if (positionBalleY < 0)
+				if (ball.y < 0)
 				{
 					ball.set_velocityC(balleX, -balleY);
 				}
 				//Bas
-				if ((positionBalleY+HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
+				if ((ball.y+HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
 				{
 					ball.set_velocityC(balleX, -balleY);
 				}
 
 				//BarreM
-				if (((positionBalleY + HAUTEUR_IMAGE_BALLE) > positionBarreMY) && 
-					!((positionBalleX > (positionBarreMX+LARGEUR_IMAGE_BARRE_M)) || ((positionBalleX+LARGEUR_IMAGE_BALLE) < positionBarreMX)))
+				if (labarre.contactMilieu(ball))
 				{
 					ball.set_velocityC(balleX, -balleY);
 				}
 
 				//BarreG
-				if (((positionBalleY + HAUTEUR_IMAGE_BALLE) > (positionBarreGY+12)) &&
-					!((positionBalleX > (positionBarreGX + LARGEUR_IMAGE_BARRE_G)) || ((positionBalleX + LARGEUR_IMAGE_BALLE) < positionBarreGX)))
+				if (labarre.contactGauche(ball))
 				{
 					ball.set_velocityP(balleR, (balleA + (M_PI/3)));
 				}
 
 				//BarreD
-				if (((positionBalleY + HAUTEUR_IMAGE_BALLE) > (positionBarreDY+12)) &&
-					!((positionBalleX > (positionBarreDX + LARGEUR_IMAGE_BARRE_D)) || ((positionBalleX + LARGEUR_IMAGE_BALLE) < positionBarreDX)))
+				if (labarre.contactDroit(ball))
 				{
 					ball.set_velocityP(balleR, (balleA - (M_PI / 3)));
 				}
@@ -701,8 +695,8 @@ int main(int argc, char* args[])
 
 				ball.get_velocityP(balleR, balleA);
 
-				positionBalleX += balleX;
-				positionBalleY += balleY;
+				ball.x += balleX;
+				ball.y += balleY;
 
 				system("cls");
 				std::cout << balleX << std::endl << balleY ;

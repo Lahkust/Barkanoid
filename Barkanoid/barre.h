@@ -16,8 +16,19 @@ Commentaires :
 #include "../SDL2/include/SDL.h"
 #include "../SDL2_image/include/SDL_image.h"
 
+#include "balle.h"
+
 class barre{
 public:
+
+	//La position en x et y du coin supérieur gauche du bord gauche
+	int Gx;
+	int Gy;
+
+	//La position en x et y du coin supérieur gauche du bord gauche
+	int Dx;
+	int Dy;
+
 
 	//Remet la barre à sa taille initiale
 	void reset_taille()
@@ -35,6 +46,60 @@ public:
 	int get_sizeX()
 	{
 		return 50 + (25 * nb_blocs);
+	}
+
+	//Retourne la hauteur de la barre
+	int get_sizeY()
+	{
+		return 25;
+	}
+
+	//retourne vrai si la balle touche le côté gauche
+	bool contactGauche(balle ball)
+	{
+		
+		if (((ball.y + ball.get_taille_y()) > (Gy + 12)) &&
+			!((ball.x > (Gx + 25)) || ((ball.x + ball.get_taille_x()) < Gx)))
+		{
+			return true;
+		}
+			
+		else
+		{
+			return false;
+		}
+	}
+
+	//retourne vrai si la balle touche le côté droit
+	bool contactDroit(balle ball)
+	{
+
+		if (((ball.y + ball.get_taille_x()) > (Dy + 12)) &&
+			!((ball.x > (Dx + 25)) || ((ball.x + ball.get_taille_x()) < Dx)))
+		{
+			return true;
+		}
+
+		else
+		{
+			return false;
+		}
+	}
+
+	//retourne vrai si la balle touche le milieu
+	bool contactMilieu(balle ball)
+	{
+
+		if (((ball.y + ball.get_taille_x()) > Dy) &&
+			!((ball.x > (Dx + 25)) || ((ball.x + ball.get_taille_x()) < (Gx + 25))))
+		{
+			return true;
+		}
+
+		else
+		{
+			return false;
+		}
 	}
 
 private:

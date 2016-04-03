@@ -24,8 +24,10 @@ Commentaires :
 
 class balle{
 public:
-	const int TAILLE_X = 50; //La largeur de la balle
-	const int TAILLE_Y = 50; //La hauteur de la balle
+
+	//La position en x et y du coin supérieur gauche
+	int x;
+	int y;
 
 	//Obtenir la vélocité carthésienne pour les déplacements
 	void get_velocityC(float &x, float &y)
@@ -66,6 +68,12 @@ public:
 		if (y < 0) angle -= angle;
 	}
 
+	int get_x() { return x; }
+	int get_y() { return y; }
+	int get_taille_x() { return taille_x; }
+	int get_taille_y() { return taille_y; }
+
+
 private:
 
 	//La vélocité carthésienne
@@ -75,6 +83,10 @@ private:
 	//La vélocité polaire
 	float rayon = 0;
 	float angle = 0;
+
+	//La taille de la balle
+	int taille_x = 50;
+	int taille_y = 50;
 };
 
 #endif
