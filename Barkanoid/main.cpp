@@ -25,7 +25,7 @@ bool init();
 bool loadMedia();
 void close();
 SDL_Texture* loadTexture(std::string path);
-void initialiserHommeCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage);
+void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage);
 
 
 
@@ -211,11 +211,42 @@ const int LARGEUR_IMAGE_HOMME_CHARSET = 79;
 const int HAUTEUR_IMAGE_HOMME_CHARSET = 113;
 
 
+//Valeurs reliées à la balle
+const int HAUTEUR_IMAGE_BALLE = 50;
+const int LARGEUR_IMAGE_BALLE = 50;
+
+//Valeurs reliées aux blocs
+const int NOMBRE_IMAGES_BLOC_CHARSET = 6;
+const int LARGEUR_IMAGE_BLOC_CHARSET = 40;
+const int HAUTEUR_IMAGE_BLOC_CHARSET = 20;
+
+
+//Valeurs reliées à la barre
+const int HAUTEUR_IMAGE_BARRE_G = 25;
+const int LARGEUR_IMAGE_BARRE_G = 25;
+
+const int HAUTEUR_IMAGE_BARRE_M = 25;
+const int LARGEUR_IMAGE_BARRE_M = 25;
+
+const int HAUTEUR_IMAGE_BARRE_D = 25;
+const int LARGEUR_IMAGE_BARRE_D = 25;
+
+
 //Les variables de type LTexture sont des objets qui découlent de la la classe LTexture créée dans ce fichier
 LTexture hommeTexture;
+LTexture balleTexture;
+LTexture barreGTexture;
+LTexture barreMTexture;
+LTexture barreDTexture;
+LTexture blocTexture;
 
 //Ce tableau de rectangles sera utilisé lors du chargement d'une image dans la structure 'hommeTexture'
-SDL_Rect hommeRect[NOMBRE_IMAGES_HOMME_CHARSET];  
+SDL_Rect hommeRect[NOMBRE_IMAGES_HOMME_CHARSET];
+SDL_Rect blocRect[NOMBRE_IMAGES_BLOC_CHARSET];
+SDL_Rect balleRect;
+SDL_Rect barreGRect;
+SDL_Rect barreMRect;
+SDL_Rect barreDRect;
 
 
 
@@ -285,7 +316,7 @@ bool loadMedia()
   //Cette variable indique si le chargément de l'élément a été effectué avec succès
   bool success = true;
 
-  //Load sprite sheet texture
+  //Load homme sprite sheet texture
   if (!hommeTexture.loadFromFile("images/hommeCharset.png"))
   {
 	printf("Échec de chargement de l'image ! \n");
@@ -294,8 +325,77 @@ bool loadMedia()
   else
   {
 	//On initialise chaque rectangle du tableau 'hommeRect'
-	initialiserHommeCharset(hommeRect, NOMBRE_IMAGES_HOMME_CHARSET, LARGEUR_IMAGE_HOMME_CHARSET, HAUTEUR_IMAGE_HOMME_CHARSET);
+	initialiserCharset(hommeRect, NOMBRE_IMAGES_HOMME_CHARSET, LARGEUR_IMAGE_HOMME_CHARSET, HAUTEUR_IMAGE_HOMME_CHARSET);
   }
+
+  //Load bloc sprite sheet texture
+  if(!blocTexture.loadFromFile("images/blocCharset.png"))
+  {
+	  printf("Échec de chargement de l'image ! \n");
+	  success = false;
+  }
+  else
+  {
+	  //On initialise chaque rectangle du tableau 'blocRect'
+	  initialiserCharset(blocRect, NOMBRE_IMAGES_BLOC_CHARSET, LARGEUR_IMAGE_BLOC_CHARSET, HAUTEUR_IMAGE_BLOC_CHARSET);
+  }
+
+  //Load balle sprite texture
+  if (!balleTexture.loadFromFile("images/ball.png"))
+  {
+	  printf("Échec de chargement de l'image ! \n");
+	  success = false;
+  }
+  else
+  {
+	  balleRect.h = HAUTEUR_IMAGE_BALLE;
+	  balleRect.w = LARGEUR_IMAGE_BALLE;
+	  balleRect.x = 0;
+	  balleRect.y = 0;
+  }
+
+  //Load sprite barre G texture
+  if (!barreGTexture.loadFromFile("images/barreGauche.png"))
+  {
+	  printf("Échec de chargement de l'image ! \n");
+	  success = false;
+  }
+  else
+  {
+	  barreGRect.h = HAUTEUR_IMAGE_BARRE_G;
+	  barreGRect.w = LARGEUR_IMAGE_BARRE_G;
+	  barreGRect.x = 0;
+	  barreGRect.y = 0;
+  }
+
+  //Load sprite barre M texture
+  if (!barreMTexture.loadFromFile("images/barreMilieu.png"))
+  {
+	  printf("Échec de chargement de l'image ! \n");
+	  success = false;
+  }
+  else
+  {
+	  barreMRect.h = HAUTEUR_IMAGE_BARRE_M;
+	  barreMRect.w = LARGEUR_IMAGE_BARRE_M;
+	  barreMRect.x = 0;
+	  barreMRect.y = 0;
+  }
+
+  //Load sprite barre D texture
+  if (!barreDTexture.loadFromFile("images/barreDroite.png"))
+  {
+	  printf("Échec de chargement de l'image ! \n");
+	  success = false;
+  }
+  else
+  {
+	  barreDRect.h = HAUTEUR_IMAGE_BARRE_D;
+	  barreDRect.w = LARGEUR_IMAGE_BARRE_D;
+	  barreDRect.x = 0;
+	  barreDRect.y = 0;
+  }
+
 
   return success;
 }
@@ -308,6 +408,12 @@ void close()
 
   //On détruit les LTextures créées dans le programme
   hommeTexture.free();
+  blocTexture.free();
+  balleTexture.free();
+  barreGTexture.free();
+  barreMTexture.free();
+  barreDTexture.free();
+
 
   //Destroy window
   SDL_DestroyRenderer(rendererFenetre);
@@ -352,7 +458,7 @@ SDL_Texture* loadTexture(std::string path)
 
 
 //Initialisation des rectangles qui vont s'associer aux différentes images du charset
-void initialiserHommeCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
+void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
 {
   for (int i = 0; i < nombreImages; i++)
   {
@@ -379,8 +485,17 @@ int main(int argc, char* args[])
   SDL_Rect* currentHommeRect = &hommeRect[indexImageCharset];  //Ce rectangle correspond à celui qu'on prendra pour afficher l'une des images du charset 'homeCharset'
 
   //On définit la position initial de l'image
-  int positionHommeX = (LARGEUR_FENETRE - LARGEUR_IMAGE_HOMME_CHARSET) / 2;
-  int positionHommeY = (HAUTEUR_FENETRE - HAUTEUR_IMAGE_HOMME_CHARSET) / 2;
+  //int positionHommeX = (LARGEUR_FENETRE - LARGEUR_IMAGE_HOMME_CHARSET) / 2;
+  //int positionHommeY = (HAUTEUR_FENETRE - HAUTEUR_IMAGE_HOMME_CHARSET) / 2;
+
+  int positionBarreGX = LARGEUR_FENETRE / 2;
+  int positionBarreGY = 650;
+  int positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
+  int positionBarreMY = 650;
+  int positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
+  int positionBarreDY = 650;
+
+
 
   //Start up SDL and create window
   if (!init())
@@ -405,7 +520,11 @@ int main(int argc, char* args[])
 	  SDL_SetRenderDrawColor(rendererFenetre, 0xFF, 0xCC, 0xCC, 0xCC);
 
 	  //On dessine cette texture
-	  hommeTexture.render(0, 0, currentHommeRect);
+	  //hommeTexture.render(0, 0, currentHommeRect);
+	  barreGTexture.render(0, 0, &barreGRect);
+	  barreMTexture.render(0, 0, &barreMRect);
+	  barreDTexture.render(0, 0, &barreDRect);
+
 
 	  //Mise à jour de 'rendererFenetre' (on redesine les images (contenues dans leurs textures) dans le renderer)
 	  SDL_RenderPresent(rendererFenetre);
@@ -432,8 +551,12 @@ int main(int argc, char* args[])
 		  else if (e.type == SDL_MOUSEMOTION)
 		  {
 			//On définit comme nouvelle position du fantôme celle de la souris
-			positionHommeX = e.motion.x;
-			positionHommeY = e.motion.y;
+			//positionHommeX = e.motion.x;
+			//positionHommeY = e.motion.y;
+
+			  positionBarreGX = e.motion.x;
+			  positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
+			  positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
 
 		  }
 
@@ -445,29 +568,37 @@ int main(int argc, char* args[])
 			switch (e.key.keysym.sym)
 			{
 			case SDLK_w:  //La touche 'w' a été appuyée
-			  positionHommeX = 0;
-			  positionHommeY = 0;
+			 // positionHommeX = 0;
+			 // positionHommeY = 0;
 			  break;
 
 			case SDLK_b:  ////La touche 'b' a été appuyée
-			  positionHommeX = 250;
-			  positionHommeY = 250;
+			//  positionHommeX = 250;
+			//  positionHommeY = 250;
 			  break;
 
 			case SDLK_UP:
-			  positionHommeY -= 10;
+			//  positionHommeY -= 10;
 			  break;
 
 			case SDLK_DOWN:
-			  positionHommeY += 10;
+			//  positionHommeY += 10;
 			  break;
 
 			case SDLK_LEFT:
-			  positionHommeX -= 10;
+			//  positionHommeX -= 10;
+
+				positionBarreGX -= 10;
+				positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
+				positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
 			  break;
 
 			case SDLK_RIGHT:
-			  positionHommeX += 10;
+			//  positionHommeX += 10;
+
+				positionBarreGX += 10;
+				positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
+				positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
 			  break;
 
 			default:
@@ -483,15 +614,19 @@ int main(int argc, char* args[])
 		/*std::cout << "indexImageCharset = " << indexImageCharset << std::endl;
 		std::cout << "compteur = " << compteur << std::endl;*/
 
-		currentHommeRect = &hommeRect[indexImageCharset];
+		//currentHommeRect = &hommeRect[indexImageCharset];
 
-		hommeTexture.render(positionHommeX, positionHommeY, currentHommeRect);
+		//hommeTexture.render(positionHommeX, positionHommeY, currentHommeRect);
+		barreGTexture.render(positionBarreGX, positionBarreGY, &barreGRect);
+		barreMTexture.render(positionBarreMX, positionBarreMY, &barreMRect);
+		barreDTexture.render(positionBarreDX, positionBarreDY, &barreDRect);
 
 		//Update screen
 		SDL_RenderPresent(rendererFenetre);
 
 		compteur++;
 
+		/*
 		//On détermine si on change d'image, selon le facteur de ralentissement
 		if (compteur % FACTEUR_RALENTISSEMENT_ANIMATION == 0)
 		{
@@ -503,7 +638,7 @@ int main(int argc, char* args[])
 			indexImageCharset = 0;
 			compteur = 0;
 		  }
-		}
+		}*/
 
 		//SDL_Delay(1000);
 
