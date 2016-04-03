@@ -203,7 +203,7 @@ int LTexture::getHeight()
 const int LARGEUR_FENETRE = 600;
 const int HAUTEUR_FENETRE = 700;
 
-const int FACTEUR_RALENTISSEMENT_ANIMATION = 200;  //Pour rendre l'animation plus rapide, indiquer un chiffre plus petit
+const int FACTEUR_RALENTISSEMENT_ANIMATION = 25;  //Pour rendre l'animation plus rapide, indiquer un chiffre plus petit
 
 //Valeurs reliées au charset 'hommeCharset.png'
 const int NOMBRE_IMAGES_HOMME_CHARSET = 7;
@@ -480,6 +480,12 @@ int main(int argc, char* args[])
   int compteur = 0;	  //Ce compteur est utilisé pour déterminer à quel moment changer d'image dans 'homeCharset'
  
 
+  balle ball; //La balle
+  ball.set_velocityC(1, 2); //Sa vitesse de départ
+
+
+
+
   SDL_Event e;        //Cette variable nous permet de détecter l'événement courant que le programme doit gérer (click, touche du clavier, etc.)
 
   SDL_Rect* currentHommeRect = &hommeRect[indexImageCharset];  //Ce rectangle correspond à celui qu'on prendra pour afficher l'une des images du charset 'homeCharset'
@@ -495,6 +501,8 @@ int main(int argc, char* args[])
   int positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
   int positionBarreDY = 650;
 
+  int positionBalleX = LARGEUR_FENETRE / 2;
+  int positionBalleY = HAUTEUR_FENETRE / 2;
 
 
   //Start up SDL and create window
@@ -554,7 +562,7 @@ int main(int argc, char* args[])
 			//positionHommeX = e.motion.x;
 			//positionHommeY = e.motion.y;
 
-			  positionBarreGX = e.motion.x;
+			  positionBarreGX = e.motion.x -25;
 			  positionBarreMX = positionBarreGX + LARGEUR_IMAGE_BARRE_G;
 			  positionBarreDX = positionBarreMX + LARGEUR_IMAGE_BARRE_M;
 
@@ -616,29 +624,95 @@ int main(int argc, char* args[])
 
 		//currentHommeRect = &hommeRect[indexImageCharset];
 
+
+
+
+
 		//hommeTexture.render(positionHommeX, positionHommeY, currentHommeRect);
 		barreGTexture.render(positionBarreGX, positionBarreGY, &barreGRect);
 		barreMTexture.render(positionBarreMX, positionBarreMY, &barreMRect);
 		barreDTexture.render(positionBarreDX, positionBarreDY, &barreDRect);
+		balleTexture.render(positionBalleX, positionBalleY, &balleRect);
 
 		//Update screen
 		SDL_RenderPresent(rendererFenetre);
 
 		compteur++;
 
-		/*
 		//On détermine si on change d'image, selon le facteur de ralentissement
 		if (compteur % FACTEUR_RALENTISSEMENT_ANIMATION == 0)
 		{
-		  indexImageCharset++;
+		 
 
-		  //Si l'index est égal à la taille du tableau de rectangles
-		  if (indexImageCharset == NOMBRE_IMAGES_HOMME_CHARSET)
-		  {
-			indexImageCharset = 0;
+			/*****************************/
+			// Code test des rebonds
+			{
+				float balleX, balleY,balleR,balleA;
+
+				ball.get_velocityC(balleX, balleY);
+				ball.get_velocityP(balleR, balleA);
+
+				//Gauche
+				if (positionBalleX < 0)
+				{
+					ball.set_velocityC(-balleX, balleY);
+					
+				}
+				//Droite
+				if ((positionBalleX+LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
+				{
+					ball.set_velocityC(-balleX, balleY);
+				}
+				//Haut
+				if (positionBalleY < 0)
+				{
+					ball.set_velocityC(balleX, -balleY);
+				}
+				//Bas
+				if ((positionBalleY+HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
+				{
+					ball.set_velocityC(balleX, -balleY);
+				}
+
+				//BarreM
+				if (((positionBalleY + HAUTEUR_IMAGE_BALLE) > positionBarreMY) && 
+					!((positionBalleX > (positionBarreMX+LARGEUR_IMAGE_BARRE_M)) || ((positionBalleX+LARGEUR_IMAGE_BALLE) < positionBarreMX)))
+				{
+					ball.set_velocityC(balleX, -balleY);
+				}
+
+				//BarreG
+				if (((positionBalleY + HAUTEUR_IMAGE_BALLE) > (positionBarreGY+12)) &&
+					!((positionBalleX > (positionBarreGX + LARGEUR_IMAGE_BARRE_G)) || ((positionBalleX + LARGEUR_IMAGE_BALLE) < positionBarreGX)))
+				{
+					ball.set_velocityP(balleR, (balleA + (M_PI/3)));
+				}
+
+				//BarreD
+				if (((positionBalleY + HAUTEUR_IMAGE_BALLE) > (positionBarreDY+12)) &&
+					!((positionBalleX > (positionBarreDX + LARGEUR_IMAGE_BARRE_D)) || ((positionBalleX + LARGEUR_IMAGE_BALLE) < positionBarreDX)))
+				{
+					ball.set_velocityP(balleR, (balleA - (M_PI / 3)));
+				}
+
+				ball.get_velocityC(balleX, balleY);						//
+				ball.set_velocityC(1.0001 * balleX, 1.0001 * balleY);	//	Code pour une légère accélération plus le temps avance
+				ball.get_velocityC(balleX, balleY);						//
+
+				ball.get_velocityP(balleR, balleA);
+
+				positionBalleX += balleX;
+				positionBalleY += balleY;
+
+				system("cls");
+				std::cout << balleX << std::endl << balleY ;
+			}
+			/********************************/
+
+
 			compteur = 0;
-		  }
-		}*/
+		  
+		}
 
 		//SDL_Delay(1000);
 
