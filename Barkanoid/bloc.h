@@ -1,4 +1,4 @@
-/* En-tête du programme
+/* En-téte du programme
 *****************************************
 Fichier :			bloc.h
 Auteur:				Guillaume Bergs & Shawn Corriveau
@@ -15,6 +15,7 @@ Commentaires :
 #include <string>
 #include "../SDL2/include/SDL.h"
 #include "../SDL2_image/include/SDL_image.h"
+#include "visuel.h"
 
 //Valeurs reliées aux blocs
 const int NOMBRE_IMAGES_BLOC_CHARSET = 7;
@@ -22,10 +23,12 @@ const int LARGEUR_IMAGE_BLOC_CHARSET = 40;
 const int HAUTEUR_IMAGE_BLOC_CHARSET = 20;
 
 //Les définitions de fonctions
+class LTexture;
 
 class bloc{
 public:
 	bloc();
+	bloc(SDL_Renderer *rendererFenetre);
 	~bloc();
 
 	LTexture blocTexture;
@@ -45,18 +48,35 @@ public:
 		vie = 0;
 	}
 
+	//Obtenir le rect actuel
+	SDL_Rect get_rect()
+	{
+		return blocRect[vie];
+	}
+
+	//Obtenir texture
+	LTexture get_texture()
+	{
+		return blocTexture;
+	}
+
 private:
 
-	int vie = 0; //Indique la vie restant au bloc; correspond à l'index du charset; si négatif, indique la suppression du bloc
+	int vie = 1; //Indique la vie restant au bloc; correspond é l'index du charset; si négatif, indique la suppression du bloc
 };
 
 bloc::bloc()
 {
+	//legacy
+}
+
+bloc::bloc(SDL_Renderer *rendererFenetre)
+{
 
 	//Load bloc sprite sheet texture
-	if (!blocTexture.loadFromFile("images/blocCharset.png"))
+	if (!blocTexture.loadFromFile("images/blocCharset.png", rendererFenetre))
 	{
-		printf("Échec de chargement de l'image ! \n");
+		printf("échec de chargement de l'image ! \n");
 		//success = false;
 	}
 	else
