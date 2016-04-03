@@ -215,10 +215,10 @@ const int HAUTEUR_IMAGE_HOMME_CHARSET = 113;
 const int HAUTEUR_IMAGE_BALLE = 50;
 const int LARGEUR_IMAGE_BALLE = 50;
 
-//Valeurs reliées aux blocs
-const int NOMBRE_IMAGES_BLOC_CHARSET = 6;
-const int LARGEUR_IMAGE_BLOC_CHARSET = 40;
-const int HAUTEUR_IMAGE_BLOC_CHARSET = 20;
+////Valeurs reliées aux blocs
+//const int NOMBRE_IMAGES_BLOC_CHARSET = 6;
+//const int LARGEUR_IMAGE_BLOC_CHARSET = 40;
+//const int HAUTEUR_IMAGE_BLOC_CHARSET = 20;
 
 
 //Valeurs reliées à la barre
