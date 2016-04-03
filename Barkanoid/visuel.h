@@ -20,7 +20,7 @@ Commentaires :
 
 
 ////Texture wrapper class
-class LTexture
+extern class LTexture
 {
 public:
 	//Initializes variables
@@ -172,7 +172,7 @@ int LTexture::getHeight()
 }
 
 //Initialisation des rectangles qui vont s'associer aux différentes images du charset
-void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
+extern void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
 {
 	for (int i = 0; i < nombreImages; i++)
 	{
