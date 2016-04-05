@@ -1,4 +1,4 @@
-/* En-téte du programme
+/* En-tête du programme
 *****************************************
 Fichier :			bloc.h
 Auteur:				Guillaume Bergs & Shawn Corriveau
@@ -23,17 +23,14 @@ const int LARGEUR_IMAGE_BLOC_CHARSET = 40;
 const int HAUTEUR_IMAGE_BLOC_CHARSET = 20;
 
 //Les définitions de fonctions
-class LTexture;
 
 class bloc{
 public:
 	bloc();
-	bloc(SDL_Renderer *rendererFenetre);
 	~bloc();
 
 	LTexture blocTexture;
 	SDL_Rect blocRect[NOMBRE_IMAGES_BLOC_CHARSET];
-
 
 	//Décrémente la vie du bloc, par défaut, de 1
 	void decrementerVie(int nb_PV = 1)
@@ -48,35 +45,17 @@ public:
 		vie = 0;
 	}
 
-	//Obtenir le rect actuel
-	SDL_Rect get_rect()
-	{
-		return blocRect[vie];
-	}
-
-	//Obtenir texture
-	LTexture get_texture()
-	{
-		return blocTexture;
-	}
-
 private:
 
-	int vie = 1; //Indique la vie restant au bloc; correspond é l'index du charset; si négatif, indique la suppression du bloc
+	int vie = 0; //Indique la vie restant au bloc; correspond à l'index du charset; si négatif, indique la suppression du bloc
 };
 
 bloc::bloc()
 {
-	//legacy
-}
-
-bloc::bloc(SDL_Renderer *rendererFenetre)
-{
-
 	//Load bloc sprite sheet texture
-	if (!blocTexture.loadFromFile("images/blocCharset.png", rendererFenetre))
+	if (!blocTexture.loadFromFile("images/blocCharset.png"))
 	{
-		printf("échec de chargement de l'image ! \n");
+		printf("Échec de chargement de l'image ! \n");
 		//success = false;
 	}
 	else

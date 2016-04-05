@@ -16,21 +16,30 @@ Commentaires :
 #include "../SDL2/include/SDL.h"
 #include "../SDL2_image/include/SDL_image.h"
 
+//Taille de l'écran en pixels
+const int LARGEUR_FENETRE = 600;
+const int HAUTEUR_FENETRE = 700;
+const int FACTEUR_RALENTISSEMENT_ANIMATION = 10;  //Pour rendre l'animation plus rapide, indiquer un chiffre plus petit
+
+
 //Les définitions de fonctions
 
+//***************************************** Classe qui nous permet de manipuler les textures (Ne pas éditer)
 
 ////Texture wrapper class
-extern class LTexture
+class LTexture
 {
 public:
 	//Initializes variables
 	LTexture();
+	LTexture(SDL_Renderer *renderer);
+
 
 	//Deallocates memory
 	~LTexture();
 
 	//Loads image at specified path
-	bool loadFromFile(std::string path, SDL_Renderer* rendererFenetre);
+	bool loadFromFile(std::string path);
 
 	//Deallocates texture
 	void free();
@@ -45,12 +54,14 @@ public:
 	void setAlpha(Uint8 alpha);
 
 	//Renders texture at given point
-	void render(int x, int y, SDL_Rect* clip = NULL, SDL_Renderer *rendererFenetre = NULL);
+	void render(int x, int y, SDL_Rect* clip = NULL);
 
 	//Gets image dimensions
 	int getWidth();
 	int getHeight();
 
+	//Renderer
+	SDL_Renderer *rendererFenetre;
 private:
 	//The actual hardware texture
 	SDL_Texture* mTexture;
@@ -66,6 +77,16 @@ LTexture::LTexture()
 	mTexture = NULL;
 	mWidth = 0;
 	mHeight = 0;
+	rendererFenetre = NULL;
+}
+
+LTexture::LTexture(SDL_Renderer *renderer)
+{
+	//Initialize
+	mTexture = NULL;
+	mWidth = 0;
+	mHeight = 0;
+	rendererFenetre = renderer;
 }
 
 LTexture::~LTexture()
@@ -74,7 +95,7 @@ LTexture::~LTexture()
 	free();
 }
 
-bool LTexture::loadFromFile(std::string path, SDL_Renderer* rendererFenetre)
+bool LTexture::loadFromFile(std::string path)
 {
 	//Get rid of preexisting texture
 	free();
@@ -145,7 +166,7 @@ void LTexture::setAlpha(Uint8 alpha)
 	SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
-void LTexture::render(int x, int y, SDL_Rect* clip, SDL_Renderer *rendererFenetre)
+void LTexture::render(int x, int y, SDL_Rect* clip)
 {
 	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
@@ -172,7 +193,7 @@ int LTexture::getHeight()
 }
 
 //Initialisation des rectangles qui vont s'associer aux différentes images du charset
-extern void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
+void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
 {
 	for (int i = 0; i < nombreImages; i++)
 	{

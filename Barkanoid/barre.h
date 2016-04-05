@@ -18,6 +18,17 @@ Commentaires :
 
 #include "balle.h"
 
+
+//Valeurs reliées à la barre
+const int HAUTEUR_IMAGE_BARRE_G = 25;
+const int LARGEUR_IMAGE_BARRE_G = 25;
+
+const int HAUTEUR_IMAGE_BARRE_M = 25;
+const int LARGEUR_IMAGE_BARRE_M = 25;
+
+const int HAUTEUR_IMAGE_BARRE_D = 25;
+const int LARGEUR_IMAGE_BARRE_D = 25;
+
 class barre{
 public:
 

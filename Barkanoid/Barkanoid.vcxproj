@@ -81,12 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="barre.cpp" />
-    <ClCompile Include="bloc.cpp" />
-    <ClCompile Include="balle.cpp" />
-    <ClCompile Include="bonus.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="visuel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="balle.h" />

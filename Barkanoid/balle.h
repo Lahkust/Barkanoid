@@ -18,6 +18,10 @@ Commentaires :
 
 #include <math.h>
 
+//Valeurs reliées à la balle
+const int HAUTEUR_IMAGE_BALLE = 25;
+const int LARGEUR_IMAGE_BALLE = 25;
+
 
 //Les définitions de fonctions
 
@@ -37,22 +41,22 @@ public:
 	}
 
 	//Obtenir la vélocité polaire pour les rebonds
-	void get_velocityP(float &r, float &phi)
+	void get_velocityP(float &r, float &theta)
 	{
 		r = rayon;
-		phi = angle;
+		theta = angle;
 	}
 
 	//Changer la véolocité avec des données polaires
-	void set_velocityP(float r, float phi)
+	void set_velocityP(float r, float theta)
 	{
 		//Change la vélocité polaire
 		rayon = r;
-		angle = phi;
+		angle = theta;
 
 		//Change la vélocité carthésienne
-		velocity_x = r * cos(phi);
-		velocity_y = r * sin(phi);
+		velocity_x = r * cos(theta);
+		velocity_y = r * sin(theta);
 	}
 
 	//Changer la vélocité avec des données cathésiennes
@@ -64,8 +68,7 @@ public:
 
 		//Change la vélocité polaire
 		rayon = sqrt((x*x) + (y*y));
-		angle = acos(x / rayon);
-		if (y < 0) angle -= angle;
+		angle = atan2(velocity_x, velocity_y);
 	}
 
 	int get_x() { return x; }
@@ -87,8 +90,8 @@ private:
 	float angle = 0;
 
 	//La taille de la balle
-	int taille_x = 50;
-	int taille_y = 50;
+	int taille_x = LARGEUR_IMAGE_BALLE;
+	int taille_y = HAUTEUR_IMAGE_BALLE;
 };
 
 #endif
