@@ -16,6 +16,7 @@ Commentaires :
 #include "../SDL2/include/SDL.h"
 #include "../SDL2_image/include/SDL_image.h"
 
+#include "visuel.h"
 #include <math.h>
 
 //Valeurs reliées à la balle
@@ -69,6 +70,9 @@ public:
 		angle = atan2(velocity_x, velocity_y);
 	}
 
+	//Faire un rebond sur une surface avec sa normale
+	void rebond(double angle);
+
 	int get_x() { return x; }
 	int get_y() { return y; }
 	int get_taille_x() { return taille_x; }
@@ -91,5 +95,30 @@ private:
 	int taille_x = LARGEUR_IMAGE_BALLE;
 	int taille_y = HAUTEUR_IMAGE_BALLE;
 };
+
+//Faire un rebond sur une surface avec sa normale
+void balle::rebond(double theta)
+{
+	set_velocityP(rayon, 2 * theta - angle + M_PI);
+	
+	//****** Patch: si angle >/< 2PI/-2PI, retire/ajoute 2PI jusqu'à ce qu'il soit entre -2PI et 2PI
+	while (angle > 2 * M_PI) angle -= (2 * M_PI);
+	while (angle < ((-2) * M_PI)) angle += (2 * M_PI);
+
+
+	//****** Patch: Si la vélocité en x/y envoie la balle hors de l'écran, inversion de la vélocité en x/y
+	if ((x < 0) && (velocity_x < 0))
+		set_velocityC(-velocity_x, velocity_y);
+	if ((y < 0) && (velocity_y < 0))
+		set_velocityC(velocity_x, -velocity_y);
+	if (((x+LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE) && (velocity_x > 0))
+		set_velocityC(-velocity_x, velocity_y);
+	if (((y+HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE) && (velocity_y > 0))
+		set_velocityC(velocity_x, -velocity_y);
+	//****** Fin patch
+
+	x += velocity_x;
+	y += velocity_y;
+}
 
 #endif

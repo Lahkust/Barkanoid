@@ -39,7 +39,7 @@ public:
 	int x;
 	int y;
 
-	bool contact(balle &ball);
+	void contact(balle &ball);
 
 	// Retourne la vie d'un bloc
 	int getVie(){ return vie; };
@@ -152,8 +152,10 @@ void bloc::setRenderer(SDL_Renderer *renderer)
 	}
 }
 
-bool bloc::contact(balle &ball)
+void bloc::contact(balle &ball)
 {
+	int dec = 1; //Le décrément à effectuer si contact
+
 	//La coordonnée en y du haut de la balle
 	int balleHaut = ball.get_y();
 	//La coordonnée en y du bas de la balle
@@ -173,19 +175,26 @@ bool bloc::contact(balle &ball)
 	int blocDroit = x + LARGEUR_IMAGE_BLOC_CHARSET;
 
 	//Si contact avec le côté haut du bloc
-	if ((balleBas > blocHaut) && (!(balleDroit <blocGauche) && !(balleGauche > blocDroit) && !(balleHaut > blocBas)))return true;
+	if ((balleBas > blocHaut) && (!(balleDroit <blocGauche) && !(balleGauche > blocDroit) && !(balleHaut > blocBas)))
+		ball.rebond(0);
 
 	//si contact avec le coté bas du bloc
-	if ((balleHaut < blocBas) && (!(balleDroit <blocGauche) && !(balleGauche > blocDroit) && !(balleBas < blocHaut)))return true;
+	else if ((balleHaut < blocBas) && (!(balleDroit <blocGauche) && !(balleGauche > blocDroit) && !(balleBas < blocHaut)))
+		ball.rebond(M_PI);
 
 	//si contact avec le coté gauche du bloc
-	if ((balleDroit > blocGauche) && (!(balleHaut > blocBas) && !(balleGauche > blocDroit) && !(balleBas < blocHaut)))return true;
+	else if ((balleDroit > blocGauche) && (!(balleHaut > blocBas) && !(balleGauche > blocDroit) && !(balleBas < blocHaut)))
+		ball.rebond(-(M_PI/2));
 
 	//si contact avec le coté droit du bloc
-	if ((balleGauche < blocDroit) && (!(balleHaut > blocBas) && !(balleDroit < blocGauche) && !(balleBas < blocHaut)))return true;
-	
-	//Sinon
-	return false;
+	else if ((balleGauche < blocDroit) && (!(balleHaut > blocBas) && !(balleDroit < blocGauche) && !(balleBas < blocHaut)))
+		ball.rebond(M_PI / 2);
+
+	else
+		dec = 0; //Pas de contact, donc pas de vie décrémentée
+
+	//Si contact et rebond, décrémenter la vie du bloc
+	decrementerVie(dec);
 }
 
 #endif

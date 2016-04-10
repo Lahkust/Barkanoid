@@ -346,7 +346,10 @@ int main(int argc, char* args[])
 		  //Si l'utilisateur fait un click de souris
 		  else if (e.type == SDL_MOUSEBUTTONDOWN)
 		  {
-			quit = true;
+			//quit = true;
+			  ball.x = LARGEUR_FENETRE / 2;
+			  ball.y = HAUTEUR_FENETRE / 2;
+			  ball.set_velocityC(2, -2);
 		  }
 		  //Si l'utilisateur déplace la souris
 		  else if (e.type == SDL_MOUSEMOTION)
@@ -435,6 +438,8 @@ int main(int argc, char* args[])
 			/*****************************/
 			// Code test des rebonds
 			{
+
+				//variables
 				float balleX, balleY, balleR, balleA, angle_mur;
 				int ballePositionX, ballePositionY;
 
@@ -443,70 +448,67 @@ int main(int argc, char* args[])
 				ball.get_velocityP(balleR, balleA);
 
 
+				//Test si contact avec quelque chose. Pour rappel, si contact, rebond avec l'objet
+
 				//si contact avec une balle, diminution de la vie du bloc et rebond
 				for (int i = 0; i < 15; ++i)
 					for (int j = 0; j < 15; ++j)
 					{
-						//std::cout << std::endl << i << " " << j;
-						if (blocs[i][j].contact(ball))
-						{
-							//std::cout << " CONTACT";
 
-							//si la vie est supérieure à zéro, la décrémenter et rebondir, sinon, agir comme s'il n'y avait pas de bloc
-							if (blocs[i][j].getVie() > 0)
-							{
-								angle_mur = M_PI;
-								blocs[i][j].decrementerVie();
-							}
+						//Si la vie est positive
+							//Tester le rebond
+							//Décrémenter la vie
+						if (blocs[i][j].getVie() > 0)
+						{
+							blocs[i][j].contact(ball);
 						}
+
 					}
+
+				//Test si contact avec un mur
 
 				//Gauche
 				if (ball.x < 0)
 				{
-					angle_mur = -5 * M_PI / 2;
+					ball.rebond(M_PI / 2);
 
 				}
 				//Droite
 				if ((ball.x + LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
 				{
-					angle_mur = -5 * M_PI / 2;
+					ball.rebond(-(M_PI / 2));
 				}
 				//Haut
 				if (ball.y < 0)
 				{
-					angle_mur = M_PI;
+					ball.rebond(0);
 				}
 				//Bas
-				if ((ball.y + HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
+				while ((ball.y + HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
 				{
-					angle_mur = 2 * M_PI;
+					ball.rebond(M_PI);
 				}
+
+				//Test si contact avec la barre
 
 				//BarreM
 				if (labarre.contactMilieu(ball))
 				{
-					angle_mur = M_PI;
+					ball.rebond(0);
 				}
 
 				//BarreG
 				if (labarre.contactGauche(ball))
 				{
-					angle_mur = 3 * M_PI / 4;
+					ball.rebond(-3 * M_PI / 4);
 				}
 
 				//BarreD
 				if (labarre.contactDroit(ball))
 				{
-					angle_mur = -3 * M_PI / 4;
+					ball.rebond(3 * M_PI / 4);
 				}
 
-				if (angle_mur != 0)
-					ball.set_velocityP(balleR, angle_mur - balleA);
-
-				ball.get_velocityC(balleX, balleY);
-				ball.set_velocityC(1.0001 * balleX, 1.0001 * balleY);	//	Code pour une légère accélération plus le temps avance
-				ball.get_velocityC(balleX, balleY);						//
 
 				ball.get_velocityP(balleR, balleA);
 
