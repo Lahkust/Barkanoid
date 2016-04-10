@@ -406,12 +406,12 @@ int main(int argc, char* args[])
 		barreDTexture.render(labarre.Dx, labarre.Dy, &barreDRect);
 		balleTexture.render(ball.x, ball.y, &balleRect);
 
-
+		//render des blocs
 		for (int i = 0; i < 15; ++i)
 			for (int j = 0; j < 15; ++j)
-				blocs[i][j].blocTexture.render(i*40,
-				j*20,
-				&blocs[i][j].getRect());
+			{
+				blocs[i][j].blocTexture.render(i * 40,j * 20,&blocs[i][j].getRect());
+			}
 
 
 		//Update screen
@@ -490,6 +490,16 @@ int main(int argc, char* args[])
 
 				ball.x = ballePositionX;
 				ball.y = ballePositionY;
+
+				//si contact avec une balle, diminution de la vie du bloc
+				for (int i = 0; i < 15; ++i)
+					for (int j = 0; j < 15; ++j)
+					{
+						if (blocs[i][j].contact(ball))
+						{
+							blocs[i][j].decrementerVie();
+						}
+					}
 
 				system("cls");
 				std::cout << balleX << std::endl << balleY << std::endl;
