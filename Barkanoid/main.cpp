@@ -261,7 +261,7 @@ int main(int argc, char* args[])
 
   bloc blocs[15][15]; //Les blocs
 
-  //Attribuer une vie aux blocs
+  //Attribuer une vie et une coordonnée aux blocs
   for (int i = 0; i < 15; ++i)
 	  for (int j = 0; j < 15; ++j)
 	  {
@@ -275,6 +275,10 @@ int main(int argc, char* args[])
 	  else if (j <= 13) blocs[i][j].decrementerVie(-3);
 
 	  else blocs[i][j].decrementerVie(-4);
+
+	  blocs[i][j].x = i * LARGEUR_IMAGE_BLOC_CHARSET;
+	  blocs[i][j].y = j * HAUTEUR_IMAGE_BLOC_CHARSET;
+
 	  }
 
 
@@ -410,7 +414,11 @@ int main(int argc, char* args[])
 		for (int i = 0; i < 15; ++i)
 			for (int j = 0; j < 15; ++j)
 			{
-				blocs[i][j].blocTexture.render(i * 40,j * 20,&blocs[i][j].getRect());
+				//Pour plus de clareté en bas
+				int bX = blocs[i][j].x; // la coordonnée en x du bloc
+				int bY = blocs[i][j].y; // la coordonnée en y du bloc
+
+				blocs[i][j].blocTexture.render(bX,bY,&blocs[i][j].getRect());
 			}
 
 
@@ -433,6 +441,25 @@ int main(int argc, char* args[])
 				angle_mur = 0;
 				ball.get_velocityC(balleX, balleY);
 				ball.get_velocityP(balleR, balleA);
+
+
+				//si contact avec une balle, diminution de la vie du bloc et rebond
+				for (int i = 0; i < 15; ++i)
+					for (int j = 0; j < 15; ++j)
+					{
+						//std::cout << std::endl << i << " " << j;
+						if (blocs[i][j].contact(ball))
+						{
+							//std::cout << " CONTACT";
+
+							//si la vie est supérieure à zéro, la décrémenter et rebondir, sinon, agir comme s'il n'y avait pas de bloc
+							if (blocs[i][j].getVie() > 0)
+							{
+								angle_mur = M_PI;
+								blocs[i][j].decrementerVie();
+							}
+						}
+					}
 
 				//Gauche
 				if (ball.x < 0)
@@ -491,16 +518,8 @@ int main(int argc, char* args[])
 				ball.x = ballePositionX;
 				ball.y = ballePositionY;
 
-				//si contact avec une balle, diminution de la vie du bloc
-				for (int i = 0; i < 15; ++i)
-					for (int j = 0; j < 15; ++j)
-					{
-						if (blocs[i][j].contact(ball))
-						{
-							blocs[i][j].decrementerVie();
-						}
-					}
 
+				//system("pause");
 				system("cls");
 				std::cout << balleX << std::endl << balleY << std::endl;
 				std::cout << balleR << std::endl << balleA * 180 / M_PI << std::endl;
