@@ -7,6 +7,8 @@ Description :		Fonction principale du jeu Barkanoid
 Commentaires :
 *****************************************/
 
+
+//*************************************** Déclarations pré-processeur
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -25,8 +27,6 @@ bool init();
 bool loadMedia();
 void close();
 SDL_Texture* loadTexture(std::string path);
-//void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage);
-
 
 
 //********************************* Variables globales (partie 1)
@@ -39,15 +39,14 @@ SDL_Renderer* rendererFenetre = NULL;
 
 
 //Les variables de type LTexture sont des objets qui découlent de la la classe LTexture créée dans ce fichier
-LTexture hommeTexture(rendererFenetre);
 LTexture balleTexture(rendererFenetre);
 LTexture barreGTexture(rendererFenetre);
 LTexture barreMTexture(rendererFenetre);
 LTexture barreDTexture(rendererFenetre);
-LTexture blocTexture(rendererFenetre);
+//LTexture blocTexture(rendererFenetre);
 
 //Ce tableau de rectangles sera utilisé lors du chargement d'une image dans la structure 'hommeTexture'
-SDL_Rect blocRect[NOMBRE_IMAGES_BLOC_CHARSET];
+//SDL_Rect blocRect[NOMBRE_IMAGES_BLOC_CHARSET];
 SDL_Rect balleRect;
 SDL_Rect barreGRect;
 SDL_Rect barreMRect;
@@ -90,12 +89,6 @@ bool init()
 	  //Creation du 'renderer' en l'associant à la fenêtre du programme
 	  rendererFenetre = SDL_CreateRenderer(fenetreProgramme, -1, SDL_RENDERER_ACCELERATED);
 
-	  hommeTexture.rendererFenetre = rendererFenetre;
-	  balleTexture.rendererFenetre = rendererFenetre;
-	  barreGTexture.rendererFenetre = rendererFenetre;
-	  barreMTexture.rendererFenetre = rendererFenetre;
-	  barreDTexture.rendererFenetre = rendererFenetre;
-	  blocTexture.rendererFenetre = rendererFenetre;
 
 	  if (rendererFenetre == NULL)
 	  {
@@ -106,6 +99,11 @@ bool init()
 	  {
 		//Initialize renderer color
 		SDL_SetRenderDrawColor(rendererFenetre, 0xFF, 0xAA, 0xAA, 0xAA);
+
+		balleTexture.rendererFenetre = rendererFenetre;
+		barreGTexture.rendererFenetre = rendererFenetre;
+		barreMTexture.rendererFenetre = rendererFenetre;
+		barreDTexture.rendererFenetre = rendererFenetre;
 
 		//Les commandes suivante permettent d'activer le chargement d'images dont le format est PNG
 		int imgFlags = IMG_INIT_PNG;
@@ -129,19 +127,7 @@ bool loadMedia()
   //Cette variable indique si le chargément de l'élément a été effectué avec succès
   bool success = true;
 
- 
 
-  //Load bloc sprite sheet texture
-  if(!blocTexture.loadFromFile("images/blocCharset.png"))
-  {
-	  printf("Échec de chargement de l'image ! \n");
-	  success = false;
-  }
-  else
-  {
-	  //On initialise chaque rectangle du tableau 'blocRect'
-	  initialiserCharset(blocRect, NOMBRE_IMAGES_BLOC_CHARSET, LARGEUR_IMAGE_BLOC_CHARSET, HAUTEUR_IMAGE_BLOC_CHARSET);
-  }
 
   //Load balle sprite texture
   if (!balleTexture.loadFromFile("images/ball.png"))
@@ -210,8 +196,6 @@ void close()
 {
 
   //On détruit les LTextures créées dans le programme
-  hommeTexture.free();
-  blocTexture.free();
   balleTexture.free();
   barreGTexture.free();
   barreMTexture.free();
@@ -260,27 +244,13 @@ SDL_Texture* loadTexture(std::string path)
 
 
 
-////Initialisation des rectangles qui vont s'associer aux différentes images du charset
-//void initialiserCharset(SDL_Rect tableauRectangles[], int nombreImages, int largeurChaqueImage, int hauteurChaqueImage)
-//{
-//  for (int i = 0; i < nombreImages; i++)
-//  {
-//	tableauRectangles[i].x = largeurChaqueImage * i;
-//	tableauRectangles[i].y = 0;
-//	tableauRectangles[i].w = largeurChaqueImage;
-//	tableauRectangles[i].h = hauteurChaqueImage;
-//  }
-//}
-
-
-
 //Fonction principale du programme
 int main(int argc, char* args[])
 {
 
   bool quit = false;  //flag pour la boucle principale. Elle permet de déterminer si l'on doit quitter le programme
-  int indexImageCharset = 0;  //Cette variable nous permet de sélectionner une image du charset de l'homme
-  int compteur = 0;	  //Ce compteur est utilisé pour déterminer à quel moment changer d'image dans 'homeCharset'
+  int indexImageCharset = 0;  //Cette variable nous permet de sélectionner une image du charset du bloc
+  int compteur = 0;	  //Ce compteur est utilisé pour déterminer quand rafraichir l'écran
  
 
   balle ball; //La balle
@@ -289,14 +259,31 @@ int main(int argc, char* args[])
   barre labarre;
   labarre.multiply_size(0.5); //Pour une taille de 1
 
+  bloc blocs[15][15]; //Les blocs
+
+  //Attribuer une vie aux blocs
+  for (int i = 0; i < 15; ++i)
+	  for (int j = 0; j < 15; ++j)
+	  {
+
+	  if (j <= 4) blocs[i][j].decrementerVie(0);
+
+	  else if (j <= 8) blocs[i][j].decrementerVie(-1);
+
+	  else if (j <= 11) blocs[i][j].decrementerVie(-2);
+
+	  else if (j <= 13) blocs[i][j].decrementerVie(-3);
+
+	  else blocs[i][j].decrementerVie(-4);
+	  }
+
 
   SDL_Event e;        //Cette variable nous permet de détecter l'événement courant que le programme doit gérer (click, touche du clavier, etc.)
 
-
   labarre.Gx = LARGEUR_FENETRE / 2;
-  labarre.Gy = 650;
+  labarre.Gy = HAUTEUR_FENETRE - 50;
   labarre.Dx = (labarre.Gx + LARGEUR_IMAGE_BARRE_G) + LARGEUR_IMAGE_BARRE_M;
-  labarre.Dy = 650;
+  labarre.Dy = HAUTEUR_FENETRE - 50;
 
   ball.x = LARGEUR_FENETRE / 2;
   ball.y = HAUTEUR_FENETRE / 2;
@@ -318,26 +305,31 @@ int main(int argc, char* args[])
 	{
 	  printf("Programme OK!\n");
 
-	  //Netoyyer l'écran (Clear Screen)
+	  //Netoyer l'écran (Clear Screen)
 	  SDL_RenderClear(rendererFenetre);
 
 	  //Il est possible de définir une couleur de background du 'renderer'
 	  SDL_SetRenderDrawColor(rendererFenetre, 0xFF, 0xCC, 0xCC, 0xCC);
 
 	  //On dessine cette texture
-	  //hommeTexture.render(0, 0, currentHommeRect);
 	  barreGTexture.render(0, 0, &barreGRect);
 	  barreMTexture.render(0, 0, &barreMRect);
 	  barreDTexture.render(0, 0, &barreDRect);
 
 
-	  //Mise à jour de 'rendererFenetre' (on redesine les images (contenues dans leurs textures) dans le renderer)
+	  //Mise à jour de 'rendererFenetre' (on redessine les images (contenues dans leurs textures) dans le renderer)
 	  SDL_RenderPresent(rendererFenetre);
+
+	  //Donner un renderer aux blocs
+	  for (int i = 0; i < 15; ++i)
+		  for (int j = 0; j < 15; ++j)
+			blocs[i][j].setRenderer(rendererFenetre);
 
 
 	  //Le programme reste ouvert tant que quit != true 
 	  while (!quit)
 	  {
+		  //SDL_get_keyboardstate
 		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -352,16 +344,12 @@ int main(int argc, char* args[])
 		  {
 			quit = true;
 		  }
-		  //Si l'utilisateur dépplace la souris
+		  //Si l'utilisateur déplace la souris
 		  else if (e.type == SDL_MOUSEMOTION)
 		  {
-			//On définit comme nouvelle position du fantôme celle de la souris
-			//positionHommeX = e.motion.x;
-			//positionHommeY = e.motion.y;
-
+			//On définit comme nouvelle position de la barre celle de la souris en X
 			  labarre.Gx = e.motion.x -25;
 			  labarre.Dx = (labarre.Gx + LARGEUR_IMAGE_BARRE_G) + LARGEUR_IMAGE_BARRE_M;
-
 		  }
 
 		  //Si une touche du clavier a été appuyée
@@ -372,27 +360,22 @@ int main(int argc, char* args[])
 			switch (e.key.keysym.sym)
 			{
 			case SDLK_w:  //La touche 'w' a été appuyée
-			 // positionHommeX = 0;
-			 // positionHommeY = 0;
+				//lebloc.decrementerVie();
 			  break;
 
 			case SDLK_b:  ////La touche 'b' a été appuyée
-			//  positionHommeX = 250;
-			//  positionHommeY = 250;
+				//lebloc.decrementerVie(-1);
 			  break;
 
 			case SDLK_UP:
-			//  positionHommeY -= 10;
 				ball.set_velocityC(0, -2);
 			  break;
 
 			case SDLK_DOWN:
-			//  positionHommeY += 10;
 				ball.set_velocityC(0, 2);
 			  break;
 
 			case SDLK_LEFT:
-			//  positionHommeX -= 10;
 				ball.set_velocityC(-2, 0);
 
 				labarre.Gx -= 10;
@@ -400,7 +383,6 @@ int main(int argc, char* args[])
 			  break;
 
 			case SDLK_RIGHT:
-			//  positionHommeX += 10;
 				ball.set_velocityC(2, 0);
 
 				labarre.Gx += 10;
@@ -417,20 +399,20 @@ int main(int argc, char* args[])
 		//Clear screen
 		SDL_RenderClear(rendererFenetre);
 
-		/*std::cout << "indexImageCharset = " << indexImageCharset << std::endl;
-		std::cout << "compteur = " << compteur << std::endl;*/
-
-		//currentHommeRect = &hommeRect[indexImageCharset];
-
-
-
-
 
 		//hommeTexture.render(positionHommeX, positionHommeY, currentHommeRect);
 		barreGTexture.render(labarre.Gx, labarre.Gy, &barreGRect);
 		barreMTexture.render((labarre.Gx + LARGEUR_IMAGE_BARRE_G), labarre.Gy, &barreMRect);
 		barreDTexture.render(labarre.Dx, labarre.Dy, &barreDRect);
 		balleTexture.render(ball.x, ball.y, &balleRect);
+
+
+		for (int i = 0; i < 15; ++i)
+			for (int j = 0; j < 15; ++j)
+				blocs[i][j].blocTexture.render(i*40,
+				j*20,
+				&blocs[i][j].getRect());
+
 
 		//Update screen
 		SDL_RenderPresent(rendererFenetre);
@@ -445,7 +427,8 @@ int main(int argc, char* args[])
 			/*****************************/
 			// Code test des rebonds
 			{
-				float balleX, balleY,balleR,balleA,angle_mur;
+				float balleX, balleY, balleR, balleA, angle_mur;
+				int ballePositionX, ballePositionY;
 
 				angle_mur = 0;
 				ball.get_velocityC(balleX, balleY);
@@ -455,12 +438,12 @@ int main(int argc, char* args[])
 				if (ball.x < 0)
 				{
 					angle_mur = -5 * M_PI / 2;
-					
+
 				}
 				//Droite
-				if ((ball.x+LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
+				if ((ball.x + LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
 				{
-					angle_mur =  -5 * M_PI / 2;
+					angle_mur = -5 * M_PI / 2;
 				}
 				//Haut
 				if (ball.y < 0)
@@ -468,7 +451,7 @@ int main(int argc, char* args[])
 					angle_mur = M_PI;
 				}
 				//Bas
-				if ((ball.y+HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
+				if ((ball.y + HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
 				{
 					angle_mur = 2 * M_PI;
 				}
@@ -482,7 +465,7 @@ int main(int argc, char* args[])
 				//BarreG
 				if (labarre.contactGauche(ball))
 				{
-					angle_mur = 3 *  M_PI / 4;
+					angle_mur = 3 * M_PI / 4;
 				}
 
 				//BarreD
@@ -491,31 +474,139 @@ int main(int argc, char* args[])
 					angle_mur = -3 * M_PI / 4;
 				}
 
-				if (angle_mur !=0)
+				if (angle_mur != 0)
 					ball.set_velocityP(balleR, angle_mur - balleA);
 
-				ball.get_velocityC(balleX, balleY);		
+				ball.get_velocityC(balleX, balleY);
 				ball.set_velocityC(1.0001 * balleX, 1.0001 * balleY);	//	Code pour une légère accélération plus le temps avance
 				ball.get_velocityC(balleX, balleY);						//
 
 				ball.get_velocityP(balleR, balleA);
 
-				ball.x += balleX;
-				ball.y += balleY;
+				ballePositionX = ball.get_x();
+				ballePositionY = ball.get_y();
+				ballePositionX += balleX;
+				ballePositionY += balleY;
+
+				ball.x = ballePositionX;
+				ball.y = ballePositionY;
 
 				system("cls");
 				std::cout << balleX << std::endl << balleY << std::endl;
-				std::cout << balleR << std::endl << balleA * 180 / M_PI;
+				std::cout << balleR << std::endl << balleA * 180 / M_PI << std::endl;
+				std::cout << ballePositionX << std::endl << ballePositionY;
 
 			}
 			/********************************/
+
+			///*****************************/
+			//// Code test des rebonds
+			//{
+			//	float balleX, balleY,balleR,balleA,angle_mur;
+
+			//	angle_mur = 0;
+			//	ball.get_velocityC(balleX, balleY);
+			//	ball.get_velocityP(balleR, balleA);
+
+			//	//Gauche
+			//	if (ball.x < 0)
+			//	{
+			//		angle_mur = -5 * M_PI / 2;
+			//		
+			//	}
+			//	//Droite
+			//	if ((ball.x+LARGEUR_IMAGE_BALLE) > LARGEUR_FENETRE)
+			//	{
+			//		angle_mur =  -5 * M_PI / 2;
+			//	}
+			//	//Haut
+			//	if (ball.y < 0)
+			//	{
+			//		angle_mur = M_PI;
+			//	}
+			//	//Bas
+			//	if ((ball.y+HAUTEUR_IMAGE_BALLE) > HAUTEUR_FENETRE)
+			//	{
+			//		angle_mur = 2 * M_PI;
+			//	}
+
+			//	//BarreM
+			//	if (labarre.contactMilieu(ball))
+			//	{
+			//		angle_mur = M_PI;
+			//	}
+
+			//	//BarreG
+			//	if (labarre.contactGauche(ball))
+			//	{
+			//		angle_mur = 3 *  M_PI / 4;
+			//	}
+
+			//	//BarreD
+			//	if (labarre.contactDroit(ball))
+			//	{
+			//		angle_mur = -3 * M_PI / 4;
+			//	}
+
+			//	if (angle_mur !=0)
+			//		ball.set_velocityP(balleR, angle_mur - balleA);
+			//	/*
+			//	ball.get_velocityP(balleR, balleA);					//	Code pour une légère accélération plus le temps avance
+			//	if (balleR < 50)									//  mais la limiter à 50
+			//		ball.set_velocityP(1.0001 * balleR, balleA);	//
+			//		*/
+
+			//	ball.get_velocityC(balleX, balleY);			
+			//	ball.get_velocityP(balleR, balleA);
+
+			//	ball.x += balleX;
+			//	ball.y += balleY;
+
+			//	//Empêcher la balle de quitter la fenêtre
+			//	/*
+			//	if (ball.x < 0)
+			//	{
+			//		ball.x += 1;
+			//	}
+
+			//	if (ball.y < 0)
+			//	{
+			//		ball.y += 1;
+			//	}
+
+			//	if (ball.x > LARGEUR_FENETRE)
+			//	{
+			//		ball.x -= 1;
+			//	}
+
+			//	if (ball.y > HAUTEUR_FENETRE)
+			//	{
+			//		ball.y -= 1;
+			//	}*/
+			//	
+
+			//	system("cls");
+
+			//	std::cout 
+			//		<< "vX: " << balleX << std::endl 
+			//		<< "vY: " << balleY << std::endl;
+			//	std::cout 
+			//		<< "vR: " << balleR << std::endl 
+			//		<< "vA: " << balleA * 180 / M_PI << std::endl;
+
+			//	std::cout
+			//		<< "x: " << ball.get_x() << std::endl
+			//		<< "y: " << ball.get_y() << std::endl;
+
+			//}
+			///********************************/
 
 
 			compteur = 0;
 		  
 		}
 
-		//SDL_Delay(1000);
+		//SDL_Delay(10);
 
 	  }//end while (!quit)
 	}

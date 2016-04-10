@@ -56,13 +56,13 @@ public:
 	//Retourne la largeur de la barre
 	int get_sizeX()
 	{
-		return 50 + (25 * nb_blocs);
+		return LARGEUR_IMAGE_BARRE_D + LARGEUR_IMAGE_BARRE_G + (LARGEUR_IMAGE_BARRE_M * nb_blocs);
 	}
 
 	//Retourne la hauteur de la barre
 	int get_sizeY()
 	{
-		return 25;
+		return HAUTEUR_IMAGE_BARRE_D;
 	}
 
 	//retourne vrai si la balle touche le côté gauche

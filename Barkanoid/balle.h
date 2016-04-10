@@ -22,9 +22,7 @@ Commentaires :
 const int HAUTEUR_IMAGE_BALLE = 25;
 const int LARGEUR_IMAGE_BALLE = 25;
 
-
 //Les définitions de fonctions
-
 
 class balle{
 public:
